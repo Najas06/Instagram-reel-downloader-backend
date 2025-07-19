@@ -1,5 +1,4 @@
-import chromium from "chrome-aws-lambda";
-import puppeteer from "puppeteer-core";
+import puppeteer from "puppeteer";
 
 const iPhone13ProMax = {
   name: "iPhone 13 Pro Max",
@@ -15,14 +14,15 @@ const iPhone13ProMax = {
   },
 };
 
-const isProd = !!(process.env.AWS_REGION || process.env.RENDER);
-
 export async function scrapeInstagramVideo(url) {
   const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: iPhone13ProMax.viewport,
-    executablePath: isProd ? await chromium.executablePath : undefined,
-    headless: chromium.headless,
+    headless: "new", // or true
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-gpu",
+      "--disable-dev-shm-usage"
+    ]
   });
 
   try {
@@ -36,8 +36,8 @@ export async function scrapeInstagramVideo(url) {
       if (
         request.resourceType() === "media" &&
         (request.url().includes(".mp4?") ||
-          request.url().includes(".m3u8") ||
-          request.url().includes(".mpd"))
+         request.url().includes(".m3u8") ||
+         request.url().includes(".mpd"))
       ) {
         videoUrl = request.url();
       }
@@ -50,7 +50,9 @@ export async function scrapeInstagramVideo(url) {
       try {
         await page.waitForSelector("video", { timeout: 10000 });
         videoUrl = await page.$eval("video", (video) => video.src);
-      } catch (_) {}
+      } catch (_) {
+        console.warn("Fallback selector failed.");
+      }
     }
 
     return videoUrl;

@@ -8,7 +8,6 @@ app.use(express.json());
 
 app.post("/api/scrape", async (req, res) => {
   const { url } = req.body;
-
   try {
     const videoUrl = await scrapeInstagramVideo(url);
     if (videoUrl) return res.json({ videoUrl });
