@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer";
 
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
 const iPhone13ProMax = {
   name: "iPhone 13 Pro Max",
@@ -31,7 +32,10 @@ export async function scrapeInstagramVideo(url) {
         // '--disable-features=site-per-process', // Sometimes helps with older puppeteer versions
         // '--disable-setuid-sandbox', // Already there, but emphasized
       ],
-      executablePath : process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath()
+      executablePath:
+        process.env.NODE_ENV === "production"
+          ? process.env.PUPPETEER_EXECUTABLE_PATH
+          : puppeteer.executablePath(),
     });
 
     const page = await browser.newPage();
@@ -77,7 +81,6 @@ export async function scrapeInstagramVideo(url) {
       return null;
     }
 
-
     // Wait for the video URL to be found or for the timeout
     const interceptedVideoUrl = await videoPromise;
 
@@ -92,11 +95,13 @@ export async function scrapeInstagramVideo(url) {
       videoUrl = await page.$eval("video", (video) => video.src);
       // console.log("Video URL from selector:", videoUrl); // For debugging
     } catch (selectorError) {
-      console.warn("Fallback selector failed or video element not found.", selectorError.message);
+      console.warn(
+        "Fallback selector failed or video element not found.",
+        selectorError.message
+      );
     }
 
     return videoUrl;
-
   } catch (error) {
     console.error("Scraping error:", error);
     return null; // Return null on any unhandled error
