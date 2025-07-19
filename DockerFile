@@ -1,20 +1,12 @@
-# Use Puppeteer's official image with Chromium pre-installed
 FROM ghcr.io/puppeteer/puppeteer:19.7.2
 
-# Set Puppeteer environment variables
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable \
     NODE_ENV=production
 
-# Set working directory
 WORKDIR /usr/src/app
 
-# Install dependencies
 COPY package*.json ./
 RUN npm install
-
-# Copy all files
 COPY . .
-
-# Start server
 CMD ["node", "index.js"]
