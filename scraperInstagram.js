@@ -15,11 +15,13 @@ const iPhone13ProMax = {
   },
 };
 
+const isProd = !!(process.env.AWS_REGION || process.env.RENDER);
+
 export async function scrapeInstagramVideo(url) {
   const browser = await puppeteer.launch({
     args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath,
+    defaultViewport: iPhone13ProMax.viewport,
+    executablePath: isProd ? await chromium.executablePath : undefined,
     headless: chromium.headless,
   });
 
