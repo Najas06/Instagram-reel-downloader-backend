@@ -1,5 +1,7 @@
 import puppeteer from "puppeteer";
 
+require("dotenv").config();
+
 const iPhone13ProMax = {
   name: "iPhone 13 Pro Max",
   userAgent:
@@ -29,6 +31,7 @@ export async function scrapeInstagramVideo(url) {
         // '--disable-features=site-per-process', // Sometimes helps with older puppeteer versions
         // '--disable-setuid-sandbox', // Already there, but emphasized
       ],
+      executablePath : process.env.NODE_ENV === "production" ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath()
     });
 
     const page = await browser.newPage();
