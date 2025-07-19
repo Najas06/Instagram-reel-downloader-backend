@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { scrapeInstagramVideo } from "./scraperInstagram";
+import { scrapeInstagramVideo } from "./scraperInstagram.js";
 
 const app = express();
 app.use(cors());
@@ -18,4 +18,6 @@ app.post("/api/scrape", async (req, res) => {
   }
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+app.listen(5000, () => console.log("🚀 Backend running on http://localhost:5000"));
+
+export default app;
