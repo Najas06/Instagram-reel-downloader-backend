@@ -1,4 +1,19 @@
-import puppeteer, { executablePath, devices } from "puppeteer";
+import puppeteer, { executablePath } from "puppeteer";
+
+// Manually define the iPhone 13 Pro Max descriptor
+const iPhone13ProMax = {
+  name: 'iPhone 13 Pro Max',
+  userAgent:
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1',
+  viewport: {
+    width: 428,
+    height: 926,
+    deviceScaleFactor: 3,
+    isMobile: true,
+    hasTouch: true,
+    isLandscape: false,
+  },
+};
 
 export async function scrapeInstagramVideo(url) {
   const browser = await puppeteer.launch({
@@ -8,22 +23,17 @@ export async function scrapeInstagramVideo(url) {
       "--no-sandbox",
       "--disable-setuid-sandbox",
       "--disable-gpu",
-      "--disable-dev-shm-usage"
-    ]
+      "--disable-dev-shm-usage",
+    ],
   });
 
   try {
     const page = await browser.newPage();
-
-    const iPhone = devices["iPhone 13 Pro Max"];
-    if (iPhone) {
-      await page.emulate(iPhone);
-    }
-
-    await page.setRequestInterception(true);
+    await page.emulate(iPhone13ProMax); // ✅ Emulate iPhone
 
     let videoUrl = null;
 
+    await page.setRequestInterception(true);
     page.on("request", (request) => {
       if (
         request.resourceType() === "media" &&

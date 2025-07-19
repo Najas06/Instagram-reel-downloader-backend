@@ -18,6 +18,7 @@ app.post("/api/scrape", async (req, res) => {
   }
 });
 
+
 app.listen(5000, () => console.log("🚀 Backend running on http://localhost:5000"));
 
 export default app;
