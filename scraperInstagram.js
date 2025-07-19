@@ -1,6 +1,6 @@
-import puppeteer from "puppeteer";
+import chromium from "chrome-aws-lambda";
+import puppeteer from "puppeteer-core";
 
-// iPhone 13 Pro Max settings
 const iPhone13ProMax = {
   name: "iPhone 13 Pro Max",
   userAgent:
@@ -17,13 +17,10 @@ const iPhone13ProMax = {
 
 export async function scrapeInstagramVideo(url) {
   const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-gpu",
-      "--disable-dev-shm-usage",
-    ],
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath,
+    headless: chromium.headless,
   });
 
   try {
